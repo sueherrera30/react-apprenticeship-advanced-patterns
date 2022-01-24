@@ -5,34 +5,19 @@ import Increment from '../Increment';
 import Styled from './Counter.styled';
 import PropTypes from 'prop-types';
 import { sizeType } from '../../types';
+import { CounterProvider } from '../../contexts/CounterContext';
 
-const Counter = ({
-  min,
-  max,
-  decrement: decrementProps,
-  increment: incrementProps,
-  count: countProps,
-}) => {
+const Counter = ({ min = 0, max = Number.MAX_SAFE_INTEGER, children }) => {
   const [count, setCount] = useState(min ?? 0);
 
-  const decrement = () => setCount((count) => Math.max(min ?? 0, count - 1));
+  const decrement = () => setCount((count) => Math.max(min, count - 1));
 
-  const increment = () =>
-    setCount((count) => Math.min(max ?? Number.MAX_SAFE_INTEGER, count + 1));
+  const increment = () => setCount((count) => Math.min(max, count + 1));
 
+  const value = { min, max, count, decrement, increment };
   return (
     <Styled.Counter>
-      <Decrement
-        {...decrementProps}
-        decrement={decrement}
-        disabled={count === min}
-      />
-      <Count {...countProps} count={count} />
-      <Increment
-        {...incrementProps}
-        increment={increment}
-        disabled={count === max}
-      />
+      <CounterProvider value={value}>{children}</CounterProvider>
     </Styled.Counter>
   );
 };
@@ -47,5 +32,9 @@ Counter.propTypes = {
     style: PropTypes.object,
   }),
 };
+
+Counter.Decrement = Decrement;
+Counter.Increment = Increment;
+Counter.Count = Count;
 
 export default Counter;
