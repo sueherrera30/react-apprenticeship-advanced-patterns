@@ -1,23 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Count from '../Count';
 import Decrement from '../Decrement';
 import Increment from '../Increment';
 import Styled from './Counter.styled';
 import PropTypes from 'prop-types';
-import { sizeType } from '../../types';
 import { CounterProvider } from '../../contexts/CounterContext';
 
-const Counter = ({ min = 0, max = Number.MAX_SAFE_INTEGER, children }) => {
-  const [count, setCount] = useState(min ?? 0);
+const Counter = ({
+  value: controlledCount,
+  onChange,
+  min = 0,
+  max = Number.MAX_SAFE_INTEGER,
+  children,
+}) => {
+  const [count, setCount] = useState(min);
 
-  const decrement = () => setCount((count) => Math.max(min, count - 1));
+  const isMounted = useRef(false);
+  const isControlled = Boolean(controlledCount);
 
-  const increment = () => setCount((count) => Math.min(max, count + 1));
+  const getCount = () => (isControlled ? controlledCount : count);
 
-  const value = { min, max, count, decrement, increment };
+  const changeCount = (newCount) =>
+    isControlled ? onChange(newCount) : setCount(newCount);
+
+  const decrement = () => changeCount(Math.max(min, getCount() - 1));
+
+  const increment = () => changeCount(Math.min(max, getCount() + 1));
+
+  useEffect(() => {
+    if (isMounted.current) {
+      !isControlled && onChange && onChange(count);
+    } else {
+      isMounted.current = true;
+    }
+  }, [count]);
+
+  const contextValue = {
+    min,
+    max,
+    count: getCount(),
+    decrement,
+    increment,
+  };
+
   return (
     <Styled.Counter>
-      <CounterProvider value={value}>{children}</CounterProvider>
+      <CounterProvider value={contextValue}>{children}</CounterProvider>
     </Styled.Counter>
   );
 };
@@ -25,12 +53,8 @@ const Counter = ({ min = 0, max = Number.MAX_SAFE_INTEGER, children }) => {
 Counter.propTypes = {
   min: PropTypes.number,
   max: PropTypes.number,
-  increment: PropTypes.shape({
-    size: sizeType,
-  }),
-  count: PropTypes.shape({
-    style: PropTypes.object,
-  }),
+  value: PropTypes.number,
+  onChange: PropTypes.func,
 };
 
 Counter.Decrement = Decrement;
