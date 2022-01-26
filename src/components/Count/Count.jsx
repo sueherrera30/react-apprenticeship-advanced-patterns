@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useCounter } from '../../contexts/CounterContext';
+import { useCounterContext } from '../../contexts/CounterContext';
 
 const Count = ({ style }) => {
-  const { count } = useCounter();
+  const { count } = useCounterContext();
   return <span style={style}>{count}</span>;
 };
 

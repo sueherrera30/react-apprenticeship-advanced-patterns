@@ -1,12 +1,13 @@
 import React from 'react';
 import Styled from './Increment.styled';
 import { sizeType } from '../../types';
-import { useCounter } from '../../contexts/CounterContext';
+import { useCounterContext } from '../../contexts/CounterContext';
+import PropTypes from 'prop-types';
 
-const Increment = ({ size }) => {
-  const { increment, count, max } = useCounter();
+const Increment = ({ size, onClick }) => {
+  const { count, max } = useCounterContext();
   return (
-    <Styled.Increment onClick={increment} size={size} disabled={count === max}>
+    <Styled.Increment onClick={onClick} size={size} disabled={count === max}>
       +
     </Styled.Increment>
   );
@@ -14,6 +15,7 @@ const Increment = ({ size }) => {
 
 Increment.propTypes = {
   size: sizeType,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default Increment;

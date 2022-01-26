@@ -7,29 +7,17 @@ import PropTypes from 'prop-types';
 import { CounterProvider } from '../../contexts/CounterContext';
 
 const Counter = ({
-  value: controlledCount,
+  value: count,
   onChange,
   min = 0,
   max = Number.MAX_SAFE_INTEGER,
   children,
 }) => {
-  const [count, setCount] = useState(min);
-
   const isMounted = useRef(false);
-  const isControlled = Boolean(controlledCount);
-
-  const getCount = () => (isControlled ? controlledCount : count);
-
-  const changeCount = (newCount) =>
-    isControlled ? onChange(newCount) : setCount(newCount);
-
-  const decrement = () => changeCount(Math.max(min, getCount() - 1));
-
-  const increment = () => changeCount(Math.min(max, getCount() + 1));
 
   useEffect(() => {
     if (isMounted.current) {
-      !isControlled && onChange && onChange(count);
+      onChange && onChange(count);
     } else {
       isMounted.current = true;
     }
@@ -38,9 +26,7 @@ const Counter = ({
   const contextValue = {
     min,
     max,
-    count: getCount(),
-    decrement,
-    increment,
+    count,
   };
 
   return (
