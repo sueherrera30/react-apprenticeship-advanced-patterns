@@ -1,10 +1,10 @@
 import React from 'react';
 import Styled from './Increment.styled';
 import { sizeType } from '../../types';
-import { useCounter } from '../../contexts/CounterContext';
+import { useCounterContext } from '../../contexts/CounterContext';
 
 const Increment = ({ size }) => {
-  const { increment, count, max } = useCounter();
+  const { increment, count, max } = useCounterContext();
   return (
     <Styled.Increment onClick={increment} size={size} disabled={count === max}>
       +

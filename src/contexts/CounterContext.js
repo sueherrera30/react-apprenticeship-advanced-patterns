@@ -8,14 +8,14 @@ const CounterProvider = ({ value, children }) => {
   );
 };
 
-const useCounter = () => {
+const useCounterContext = () => {
   const context = useContext(CounterContext);
 
   if (context === undefined) {
-    throw new Error('useCounter must be used within a CounterProvider');
+    throw new Error('useCounterContext must be used within a CounterProvider');
   }
 
   return context;
 };
 
-export { CounterProvider, useCounter };
+export { CounterProvider, useCounterContext };

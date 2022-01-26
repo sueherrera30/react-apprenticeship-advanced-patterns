@@ -1,8 +1,8 @@
 import React from 'react';
-import { useCounter } from '../../contexts/CounterContext';
+import { useCounterContext } from '../../contexts/CounterContext';
 
 const Decrement = () => {
-  const { decrement, count, min } = useCounter();
+  const { decrement, count, min } = useCounterContext();
   return (
     <button onClick={decrement} disabled={count === min}>
       -
