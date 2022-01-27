@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-
-const Count = ({ count, style }) => {
-  return <span style={style}>{count}</span>;
+import CounterContext from '../../context';
+const Count = ({ style }) => {
+  const value = useContext(CounterContext);
+  return <span style={style}>{value.count}</span>;
 };
 
 Count.propTypes = {
-  count: PropTypes.number,
   style: PropTypes.object,
 };
 

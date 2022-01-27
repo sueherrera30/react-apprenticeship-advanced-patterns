@@ -5,6 +5,7 @@ import Increment from '../Increment';
 import Styled from './Counter.styled';
 import PropTypes from 'prop-types';
 import { sizeType } from '../../types';
+import CounterContext from '../../context';
 
 const Counter = ({
   min = 0,
@@ -19,20 +20,28 @@ const Counter = ({
 
   const increment = () => setCount((count) => Math.min(max, count + 1));
 
+  const counterContextValue = {
+    decrement,
+    increment,
+    count,
+    min,
+    max,
+  };
+
   return (
-    <Styled.Counter>
-      <Decrement
-        {...decrementProps}
-        decrement={decrement}
-        disabled={count === min}
-      />
-      <Count {...countProps} count={count} />
-      <Increment
-        {...incrementProps}
-        increment={increment}
-        disabled={count === max}
-      />
-    </Styled.Counter>
+    <CounterContext.Provider value={counterContextValue}>
+      <Styled.Counter>
+        <Decrement
+          {...decrementProps}
+          decrement={decrement}
+        />
+        <Count {...countProps} count={count} />
+        <Increment
+          {...incrementProps}
+          increment={increment}
+        />
+      </Styled.Counter>
+    </CounterContext.Provider>
   );
 };
 

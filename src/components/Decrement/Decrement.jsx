@@ -1,17 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
-const Decrement = ({ decrement, disabled }) => {
+import React, { useContext } from 'react';
+import CounterContext from '../../context';
+const Decrement = () => {
+  const value = useContext(CounterContext);
+  const { count, min } = value;
   return (
-    <button onClick={decrement} disabled={disabled}>
+    <button onClick={value.decrement} disabled={count === min}>
       -
     </button>
   );
-};
-
-Decrement.propTypes = {
-  decrement: PropTypes.func.isRequired,
-  disabled: PropTypes.bool,
 };
 
 export default Decrement;
