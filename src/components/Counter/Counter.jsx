@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Count from '../Count';
 import Decrement from '../Decrement';
 import Increment from '../Increment';
@@ -8,22 +8,37 @@ import { sizeType } from '../../types';
 import CounterContext from '../../context';
 
 const Counter = ({
+  value: controlledValue,
+  onChange,
   min = 0,
   max = Number.MAX_SAFE_INTEGER,
   decrement: decrementProps,
   increment: incrementProps,
   count: countProps,
 }) => {
+  const isMounted = useRef(false);
+  const isControlled = Boolean(controlledValue);
+  const getCount = () => (isControlled ? controlledValue : count);
+  const changeCount = (newCount) => (isControlled ? onChange(newCount) : setCount(newCount) )
+
   const [count, setCount] = useState(min ?? 0);
 
-  const decrement = () => setCount((count) => Math.max(min, count - 1));
+  const decrement = () => changeCount(Math.max(min, getCount() - 1));
 
-  const increment = () => setCount((count) => Math.min(max, count + 1));
+  const increment = () => changeCount(Math.min(max, getCount() + 1));
+
+  useEffect(() => {
+    if(isMounted.current){
+      !isControlled && onChange &&onChange(count);
+    } else {
+      isMounted.current = true;
+    }
+  }, [count]);
 
   const counterContextValue = {
     decrement,
     increment,
-    count,
+    count: getCount(),
     min,
     max,
   };
