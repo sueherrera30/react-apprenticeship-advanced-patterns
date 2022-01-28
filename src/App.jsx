@@ -1,21 +1,22 @@
-import { useState } from 'react';
 import Counter from './components/Counter';
-
-const App = () => {
-  const [count, setCount] = useState(1);
-  const handleCounterChange = (newCount) => {
-    setCount(newCount)
-  }
+import useCounter from './utils/useCount';
+import Count from './components/Count/Count';
+import Decrement from './components/Decrement/Decrement';
+import Increment from './components/Increment/Increment';
+const App = () => { 
+  const { count,  decrement, increment, min, max } = useCounter({
+    initial: 1,
+    min: 1,
+    max: 10,
+  });
   return (
-    <Counter
-      min={1}
-      max={10}
-      onChange={handleCounterChange}
-      value={count}
-      // increment={{ size: 'large' }}
-      // count={{ style: { fontWeight: 'bold', padding: 10 } }}
-    />
+    <Counter value={count} min={min} max={max}>
+    <Decrement decrement={decrement} />
+      <Count />
+      <Increment increment={increment} />
+  </Counter>
   );
 };
+
 
 export default App;
